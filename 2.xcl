@@ -1,0 +1,231 @@
+//2.4
+bool deleteBetween(sqList &t,ElemType s,ElemType t){
+    if (t.length == 0){
+        return false;
+    }
+    if (s >= t){
+        return false;
+    }
+    int k = 0;
+    for(int i = 0; i < t.length; i++){
+        if(t.data[i] < s || t.data[i] > t){
+            t.data[k] = t.data[i];
+            k++;
+        }
+        else{
+            t.length--;
+        }
+    }
+    return true;
+}
+
+//2.5
+bool deleteBetween(sqList &l,ElemType s,ElemType t){
+    if (l.length == 0){
+        return false;
+    }
+    if (s >= t){
+        return false;
+    }
+    int k = 0;
+    for(int i = 0; i < l.length; i++){
+        if(l.data[i] < s || l.data[i] > t){
+            l.data[k] = l.data[i];
+            k++;
+        }
+        else{
+            l.length--;
+        }
+    }
+    return true;
+}
+
+//2.6
+bool deleteDuplicate(sqList &l){
+    int k = 0;
+    for(int i = 0; i < l.length-1; i++){
+        if(l.data[i] != l.data[i+1]){
+            l.data[k] = l.data[i];
+            k++;
+        }
+        else{
+            l.length--;
+        }
+    }
+    l.data[k] = l.data[l.length-1];
+    return true;
+}
+
+//2.7
+sqList merge(sqList &l1,sqList &l2){
+    sqList l;
+    ElemType* data = (ElemType*)malloc(sizeof(ElemType) * (l1.length + l2.length));
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while(i < l1.length && j < l2.length){
+        if(l1.data[i] <= l2.data[j]){
+            data[k] = l1.data[i];
+            i++;
+        }
+        else{
+            data[k] = l2.data[j];
+            j++;
+        }
+        k++;
+    }
+    while(i < l1.length){
+        data[k] = l1.data[i];
+        i++;
+        k++;
+    }
+    while(j < l2.length){
+        data[k] = l2.data[j];
+        j++;
+        k++;
+    }
+    l.data = data;
+    l.length = k;
+    return l;
+}
+
+//2.8
+void swapList(sqList &l1,sqList &l2){
+    int i = 0;
+    ElemType temp;
+    while(i < l1.length || i < l2.length){
+        temp = l1.data[i];
+        l2.data[i]; = l1.data[i];
+        l1.data[i] = temp;
+        i++;
+    }
+    while(i < l1.length){
+        data[k] = l1.data[i];
+        l2.data[i]; = l1.data[i];
+    }
+    while(j < l2.length){
+        data[k] = l2.data[j];
+        i++;
+    }
+}
+
+//2.9
+void search(sqList &l,ElemType t){
+    int low = 0;
+    int high = l.length;
+    int mid = 0;
+    bool find = false;
+    ElemType temp;
+    while(low <= high){
+        mid = (high - low) / 2;
+        if(l.data[mid] == t){
+            temp = l.data[mid];
+            l.data[mid] = l.data[mid + 1];
+            l.data[mid + 1] = temp;
+            find = true;
+            break;
+        }
+        if(l.data[mid] > t){
+            high = mid - 1;
+            continue;
+        }
+        if(l.data[mid] < t){
+            low = mid + 1;
+            continue;
+        }
+    }
+    if(!find){
+        for(int k = l.length;k > low;k--){
+            l.data[k] = l.data[k - 1];
+        }
+        l.data[low + 1] = t;
+        l.length++；
+    }
+}
+
+//2.10
+void leftShift(ElemType *a, int size, int p){
+    //求size与p的最大公约数
+    int m = size;
+    int n = p;
+    int temp = 0;
+    ElemType t;
+    while(n != 0){
+        m = m % n;
+        temp = m;
+        m = n;
+        n = temp;
+    }
+    //最大公约数为m
+    for(int i = 0; i < m;i++){
+        int k = 0;
+        for(int j = 0; j < size / m; j++){
+            t = a[i];
+            a[i] = a[(i+j*m)%n];
+            a[(i+j*m)%n] = t;
+        }
+    }
+}
+
+//2.11
+int median(ElemType *s1,ElemType *s2,int size1,int size2){
+    int low1 = 0;
+    int low2 = 0;
+    int high1 = size1 - 1;
+    int high2 = size2 - 1;
+    while(low1 != high1 && low2 != high2){
+        int mid1 = s1[(low1+high1)/2];
+        int mid2 = s2[(low2+high2)/2];
+        if(mid1 == mid2){
+            return mid1;
+        }
+        if(mid1 < mid2){
+            low1 = (low1+high1)/2 + 1;
+            high2 = (low2+high2)/2 - 1;
+            continue;
+        }
+        if(mid1 > mid2){
+            low2 = (low2+high2)/2 + 1;
+            high1 = (low1+high1)/2 - 1;
+            continue;
+        }
+    }
+    if(s1[(low1+high1)/2]>s2[(low2+high2)/2]){
+        return s2[(low2+high2)/2];
+    }
+    else{
+        return s1[(low1+high1)/2];
+    }
+}
+
+//2.12
+int majority(int *t,int size){
+    int current = t[0];
+    int count = 1;
+    for(int i = 1;i < size;i++){
+        if(count==0){
+            current = t[i+1];
+            i++;
+        }
+        else{
+            if(t[i]==current){
+                count++;
+            }
+            else{
+                count--;
+            }
+        }
+    }
+    count = 0;
+    for(int i = 0; i < size;i++){
+        if(t[i]==current){
+            count++;
+        }
+    }
+    if(count > size / 2){
+        return current;
+    }
+    else{
+        return -1;
+    }
+}

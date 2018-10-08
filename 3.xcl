@@ -1,0 +1,4 @@
+//2.1
+void delete(sqList &l,ElemType x){
+    
+}
