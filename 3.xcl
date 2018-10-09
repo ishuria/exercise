@@ -1,4 +1,386 @@
 //2.1
-void delete(sqList &l,ElemType x){
-    
+void delete(LinkList &l,ElemType x){
+    LNode *temp;
+    if(l == null){
+        return;
+    }
+    if(l->data == x){
+        temp = l;
+        l = l->next;
+        free(temp);
+        delete(l,x);
+    }
+    else{
+       delete(l->next,x); 
+    }
 }
+
+//2.2
+void delete(LinkList &l,ElemType x){
+    LNode *temp;
+    LNode *p;
+    if(l->next == null){
+        return;
+    }
+    temp = l->next;
+    while(temp != null){
+        if(temp->data == x){
+            p = temp;
+            temp = temp->next;
+            free(p);
+        }
+        else{
+            temp = temp -> next;
+        }
+    }
+}
+
+//2.3
+void printReverse(LinkList &l){
+    LNode *temp;
+    LNode *reverse = (LNode*)malloc(sizeof(LNode));
+    if(l->next == null){
+        return;
+    }
+    temp = l->next;
+    while(temp != null){
+        reverse->data = temp->data;
+        temp = reverse;
+        reverse = (LNode*)malloc(sizeof(LNode));
+        reverse->next = temp;
+        temp = temp -> next;
+    }
+    temp = reverse->next;
+    while(temp != null){
+        print(temp->data);
+        temp = temp -> next;
+    }
+}
+
+//2.4
+
+
+//2.5
+void sortIncrease(LinkList &l){
+    if(l->next == null){
+        return;
+    }
+    LNode *min = l->next;
+    LNode *temp = l->next;
+    //遍历寻找最小值节点
+    while(temp != null){
+        if(temp->data < min->data){
+            min = temp;
+        }
+        temp = temp->next;
+    }
+    //头插最小节点
+
+}
+
+//2.7
+void deleteBetween(LinkList &l,ElemType s,ElemType t){
+    if(l->next == null){
+        return;
+    }
+    LNode *temp = l;
+    LNode *p;
+    while(temp->next != null){
+        if(temp->next->data > s && temp->next->data < t){
+            p = temp->next;
+            temp->next = temp->next->next;
+            free(p);
+        }
+        temp = temp->next;
+    }
+}
+
+//2.8
+void findCommon(LinkList &l1,LinkList &l2){
+    LNode *temp1 = l1;
+    LNode *temp2 = l2;
+    while(temp1->next != null){
+        while(temp2->next != null){
+            if(temp2->next->data == temp1->next->data){
+                print();
+            }
+            temp2 = temp2->next;
+        }
+        temp2 = l2;
+        temp1 = temp1->next;
+    }
+}
+
+//2.9
+void findMinAndFree(LinkList &l){
+    if(l->next==null){
+        return;
+    }
+    LNode* temp,min,p;
+    temp = l;
+    min = l;
+    while(l->next!=null){
+        while(temp->next!=null){
+            if(temp->next->data < min->next->data){
+                min = temp;
+            }
+            temp = temp->next;
+        }
+        //删除min->next
+        p = min->next;
+        min->next = p->next;
+        free(p);
+    }
+}
+
+//2.10
+void splitOddAndEven(LinkList &l,LinkList &odd,LinkList &even){
+    LNode* oddP = odd;
+    LNode* evenP = even;
+    if(l->next==null){
+        return;
+    }
+    LNode* temp = l;
+    int i = 1;
+    while(temp->next!=null){
+        if(i%2==0){
+            evenP->next = temp->next;
+            evenP = evenP->next;
+        }
+        else{
+            oddP->next = temp->next;
+            oddP = oddP->next;
+        }
+        temp = temp->next;
+        i++;
+    }
+}
+
+//2.11
+void splitOddAndEven2(LinkList &l,LinkList &odd,LinkList &evenReverse){
+    LNode* oddP = odd;
+    LNode* evenTemp = evenReverse;
+    if(l->next==null){
+        return;
+    }
+    LNode* temp = l;
+    int i = 1;
+    while(temp->next!=null){
+        if(i%2==0){
+            evenReverse = temp->next;
+            evenReverse->next = evenTemp;
+            evenTemp = evenReverse;
+        }
+        else{
+            oddP->next = temp->next;
+            oddP = oddP->next;
+        }
+        temp = temp->next;
+        i++;
+    }
+}
+
+//2.12
+void deleteDuplicate(LinkList &l){
+    if(l->next==null){
+        return;
+    }
+    LNode* temp = l->next;
+    while(temp->next!=null){
+        if(temp->data==temp->next->data){
+            //delete temp->next
+            LNode* d = temp->next;
+            temp->next = temp->next->next;
+            free(d);
+        }
+        else{
+            temp = temp->next;
+        }
+    }
+}
+
+//2.13
+void reverseMerge(LinkList &l1,LinkList &l2){
+    LNode* p1=l1;
+    LNode* p2=l2;
+    LNode* merge=l2;
+    LNode* p;
+    while(p1->next!=null&&p2->next!=null){
+        if(p1->next->data<=p2->next->data){
+            //p1->next头插至merge
+            p = p1->next;
+            p1->next=p1->next->next;
+            p->next=merge->next;
+            merge->next=p;
+        }
+        else{
+            //p2->next头插至merge
+            p = p2->next;
+            p2->next = p2->next->next;
+            p->next=merge->next;
+            merge->next=p;
+        }
+    }
+}
+
+//2.14
+void genCommon(LinkList &l1,LinkList &l2,LinkList &common){
+    LNode* p1=l1;
+    LNode* p2=l2;
+    LNode* pCommon;
+    while(p1->next!=null){
+        while(p2->next!=null){
+            if(p1->next->data==p2->next->data){
+                pCommon->next=(LNode*)malloc(size(LNode));
+                pCommon->next->data=p1->next->data;
+                pCommon=pCommon->next;
+            }
+            p2=p2->next;
+        }
+        p1=p1->next;
+    }
+}
+
+//2.15
+//删除A中不在B中的元素即可
+
+//2.16
+bool isSubLinkList(LinkList &a,LinkList &b){
+    LNode* pA=a;
+    LNode* pB=b;
+    LNode* tempA;
+    while(pA->next!=null){
+        if(pB->next->data==pA->next->data){
+            tempA = pA;
+            bool isSubLinkList = true;
+            while(pB->next!=null){
+                if(tempA->next==null){
+                    isSubLinkList = false;
+                    break;
+                }
+                if(pB->next->data!=tempA->next->data){
+                    isSubLinkList = false;
+                    break;
+                }
+                tempA=tempA->next;
+                pB=pB->next;
+            }
+            if(isSubLinkList){
+                return true;
+            }
+        }
+        pA=pA->next;
+    }
+    return false;
+}
+
+//2.17
+bool isSymmetric(LinkList &l){
+    LNode *head=l->next;
+    LNode *tail=l->next->prior;
+    while(head!=tail){
+        if(head->data!=tail->data){
+            return false;
+        }
+        head=head->next;
+        tail=tail->prior;
+    }
+    return true;
+}
+
+//2.18
+LinkList merge(LinkList &l1,LinkList &l2){
+    l1->tail->next=l2->head;
+    l2->tail->next=l1->head;
+    return l1;
+}
+
+//2.19
+void printMinAndDelete(LinkList &l){
+    LNode* temp=l->head;
+    LNode* p;
+    if(temp->next==null){
+        return
+    }
+    while(l->head->next!=null){
+        temp=l->head;
+        LNode* min=temp->next;
+        while(temp->next!=null){
+            if(temp->next->data<min->next->data){
+                min = temp;
+            }
+            temp = temp->next;
+        }
+        if(min->next==l->head){
+            p=min->next;
+            l->tail=min;
+            min->next=l->head;
+            free(p);
+        }
+        else{
+            p=min->next;
+            min->next=min->next->next;
+            free(p);
+        }
+    }
+}
+
+//2.20
+LNode Locate(LinkList &l,ElemType x){
+    LNode* temp = L->head;
+    LNode* find = null;
+    if(temp->next==null){
+        return null;
+    }
+    while(temp->next!=null){
+        if(temp->next->data==x){
+            temp->next->freq = temp->next->freq + 1;
+            find = temp->next;
+            while(temp->next->freq>temp->freq){
+                //交换temp与temp->next
+                if(temp->pred!=null){
+                    temp->pred->next=temp->next;
+                }
+                temp->next->pred=temp->pred;
+                temp->pred=temp->next;
+                temp->pred->next=temp;
+                temp->next=temp->pred->next;
+                if(temp->next!=null){
+                    temp->next->pred=temp;
+                }
+                if(temp->pred==null){
+
+                }
+                else{
+                    temp=temp->pred->pred;
+                }
+            }
+        }
+        temp = temp->next;
+    }
+    return find;
+}
+
+//2.21
+LNode findK(LinkList &l,int k){
+    LNode* temp=l->head;
+    int count=0;
+    while(temp->next!=null){
+        temp=temp->next;
+        count++;
+    }
+    if(count==k){
+        return temp;
+    }
+    if(count>k){
+        int pos=n-k+1;
+        temp=l->head;
+        for(int i=0;i<pos;i++){
+            temp=temp->next;
+        }
+        return temp;
+    }
+    return null;
+}
+
+//2.22
