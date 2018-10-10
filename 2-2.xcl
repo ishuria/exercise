@@ -362,7 +362,7 @@ LNode Locate(LinkList &l,ElemType x){
 }
 
 //2.21
-LNode findK(LinkList &l,int k){
+LNode* findK(LinkList &l,int k){
     LNode* temp=l->head;
     int count=0;
     while(temp->next!=null){
@@ -384,3 +384,39 @@ LNode findK(LinkList &l,int k){
 }
 
 //2.22
+LNode* findCommon(LinkList &l1,LinkList &l2){
+    //统计长度
+    int c1=0,c2=0;
+    LNode* p1=l1->head;
+    LNode* p2=l2->head;
+    LNode* p=null;
+    while(p1->next!=null){
+        c1++;
+        p1=p1->next;
+    }
+    while(p2->next!=null){
+        c2++;
+        p2=p2->next;
+    }
+    if(c1>c2){
+        int diff=c1-c2;
+        c1=0;
+        c2=0;
+        p1=l1->head;
+        p2=l2->head;
+        while(c1<diff){
+            p1=p1->next;
+        }
+        while(p1->next!=null){
+            if(p1->next->data==p2->next->data){
+                p=p1->next;
+            }
+            else{
+                p=null;
+            }
+        }
+    }
+    else{
+
+    }
+}

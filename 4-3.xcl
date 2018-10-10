@@ -1,0 +1,163 @@
+//4.3.3
+void lrd(BiTree &t){
+    BiNode* p=t;
+    BiNode* lastVisit;
+    InitStack(s);
+    Push(s,p);
+    while(p||!s.StackEmpty()){
+        if(p!=null){
+            s.push(p);
+            p=p->lchild;
+        }
+        else{
+            GetTop(s,p);
+            if(p->rchild!=null&&p->rchild!=lastVisit){
+                p=p->rchild;
+                Push(s,p);
+                p=p->lchild;
+            }
+            else{
+                Pop(s,p);
+                visit(p);
+                lastVisit=p;
+                p=null;
+            }
+        }
+    }
+}
+
+//4.3.4
+void reverse(BiTree T){
+    InitStack(S);
+    InitQueue(Q);
+    p=T;
+    EnQueue(Q,p);
+    while(!IsEmpty(Q)){
+        DeQueue(Q,p);
+        Push(S,p);
+        if(p->lchild!=null){
+            EnQueue(Q,p->lchild);
+        }
+        if(p->rchild!=null){
+            EnQueue(Q,p->rchild);
+        }
+    }
+    while(!IsEmpty(S)){
+        Pop(S,p);
+        visit(p)
+    }
+}
+
+//4.3.5
+void height(BiTree T){
+    int max = 0;
+    p=T;
+    BiNode* lastVisit;
+    InitStack(S);
+    Push(S,p);
+    while(p||!IsEmpty(S)){
+        if(p->lchild!=null){
+            Push(S,p);
+            if(StackLength(S)>max){
+                max++;
+            }
+            p=p->lchild;
+        }
+        else{
+            GetTop(S,p);
+            if(p->rchild!=null&&lastVisit!=p->rchild){
+                p=p->rchild;
+                Push(S,p);
+                if(StackLength(S)>max){
+                    max++;
+                }
+                p=p->lchild;
+            }
+            else{
+                Pop(S,p);
+                lastVisit=p;
+                p=null;
+            }
+        }
+    }
+}
+
+//4.3.6
+//先序：ABCDEFG
+//中序：CBEDFAG
+void genTree(int* pre,int* mid,int size,BiTree &T){
+    BiNode *p = (BiNode*)malloc(sizeof(BiNode));
+    T->data=pre[0];
+    //根节点在中序中的位置
+    int rootMid=-1;
+    for(int i=0;i<size;i++){
+        if(pre[0]=mid[i]){
+            rootMid=i;
+        }
+    }
+    //右子树的根节点在先序中的位置
+    for(int i=0;i<size;i++){
+        if(pre[i]=mid[rootMid+1]){
+            rootMid=i;
+        }
+    }
+    BiNode *left = (BiNode*)malloc(sizeof(BiNode));
+    BiNode *right = (BiNode*)malloc(sizeof(BiNode));
+    T->lchild=left;
+    T->rchild=right;
+    //生成左子树
+    genTree(pre[1],mid,rootMid-1,left);
+    //生成右子树
+    genTree(pre[rootMid+1],mid[rootMid+1],size-rootMid,right);
+}
+
+//4.3.7
+bool IsCompleteBiTree(BiTree &T){
+    InitQueue(Q);
+    p=T;
+    EnQueue(p);
+    bool checkLeaf=false;
+    while(!IsEmpty(Q)){
+        DeQueue(Q,p);
+        if(p->lchild==null&&p->rchild!=null){
+            return false;
+        }
+        if(checkLeaf){
+            if(p->lchild!=null||p->rchild!=null){
+                return false;
+            }
+        }
+        else{
+            if((p->lchild!=null&&p->rchild==null)
+                ||(p->lchild==null&&p->rchild==null)){
+                checkLeaf=true;
+            }
+        }
+        if(p->lchild!=null){
+            EnQueue(Q,p->lchild);
+        }
+        if(p->rchild!=null){
+            EnQueue(Q,p->rchild);
+        }
+    }
+}
+
+//4.3.8
+int calcDouble(BiTree &T){
+    InitQueue(Q);
+    p=T;
+    int count=0;
+    while(!IsEmpty(Q)){
+        DeQueue(Q,p);
+        if(p->lchild!=null&&p->rchild!=null){
+            count++;
+        }
+        if(p->lchild!=null){
+            EnQueue(Q,p->lchild);
+        }
+        if(p->rchild!=null){
+            EnQueue(Q,p->rchild);
+        }
+    }
+    return count;
+}
