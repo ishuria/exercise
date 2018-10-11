@@ -147,6 +147,7 @@ int calcDouble(BiTree &T){
     InitQueue(Q);
     p=T;
     int count=0;
+    EnQueue(Q,p);
     while(!IsEmpty(Q)){
         DeQueue(Q,p);
         if(p->lchild!=null&&p->rchild!=null){
@@ -160,4 +161,131 @@ int calcDouble(BiTree &T){
         }
     }
     return count;
+}
+
+//4.3.9
+void reverse(BiTree &T){
+    InitQueue(Q);
+    p=T;
+    EnQueue(Q,p);
+    while(IsEmpty(Q)){
+        DeQueue(Q,p);
+        if(p->lchild!=null){
+            EnQueue(Q,p->lchild);
+        }
+        if(->rchild!=null){
+            EnQueue(Q,p->rchild);
+        }
+        //交换P的左右子节点
+        BiNode *temp;
+        temp=p->lchild;
+        p->lchild=p->rchild;
+        p->rchild=temp;
+    }
+}
+
+//4.3.10
+void preK(BiTree &T,int k){
+    InitStack(S);
+    int count=0;
+    p=T;
+    while(p!=null||!IsEmpty(S)){
+        if(p!=null){
+            visit(p);
+            if(count==k-1){
+                return p->data;
+            }
+            Push(S,p);
+            p=p->lchild;
+        }
+        else{
+            Pop(S,p);
+            p=p->rchild;
+        }
+    }
+    return -1;
+}
+
+//4.3.11
+void preDelete(BiTree &T,int x){
+    InitStack(S);
+    InitQueue(Q);
+    p=T;
+    temp=null;
+    while(p!=null||!IsEmpty(S)){
+        if(p!=null){
+            if(p->data==x){
+                //删除以该节点为根的树
+                temp=p;
+                EnQueue(temp);
+                while(!IsEmpty(Q)){
+                    DeQueue(Q,temp);
+                    if(temp->lchild!=null){
+                        EnQueue(Q,temp->lchild);
+                    }
+                    if(temp->rchild!=null){
+                        EnQueue(Q,temp->rchild);
+                    }
+                    free(temp);
+                }
+                p=null;
+            }
+            else{
+                Push(S,p);
+                p=p->lchild;
+            }
+        }
+        else{
+            Pop(S,p);
+            p=p->rchild;
+        }
+    }
+}
+
+//4.3.12
+void printX(BiTree &T,int x){
+    InitStack(S);
+    p=T;
+    while(p!=null||IsEmpty(S)){
+        if(p!=null){
+            if(p->data==x){
+                while(!IsEmpty(S)){
+                    Pop(S,p);
+                    print(p->data);
+                }
+                return;
+            }
+            else{
+                Push(S,p);
+                p=p->lchild;
+            }
+        }
+        else{
+            Pop(S,p);
+            p=p->rchild;
+        }
+    }
+}
+
+//4.3.13
+void FindCommonAncestor(BiTree &T,BiNode *p,BiNode q){
+    if(p==T||q==T){
+        return T;
+    }
+    BiNode lCommon = FindCommonAncestor(T->lchild,p,q);
+    BiNode rCommon = FindCommonAncestor(T->rchild,p,q);
+    if(lCommon!=null&&rCommon!=null){
+        return T;
+    }
+    else if(lCommon!=null){
+        return lCommon;
+    }
+    else{
+        return rCommon;
+    }
+}
+
+//4.3.14
+void FindMaxWidth(BiTree &T){
+
 }
