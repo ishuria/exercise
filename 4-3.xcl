@@ -246,7 +246,7 @@ void preDelete(BiTree &T,int x){
 void printX(BiTree &T,int x){
     InitStack(S);
     p=T;
-    while(p!=null||IsEmpty(S)){
+    while(p!=null||!IsEmpty(S)){
         if(p!=null){
             if(p->data==x){
                 while(!IsEmpty(S)){
@@ -288,4 +288,120 @@ void FindCommonAncestor(BiTree &T,BiNode *p,BiNode q){
 //4.3.14
 void FindMaxWidth(BiTree &T){
 
+}
+
+//4.3.15
+int* FindPost(int* pre,int size){
+    int root=pre[0];
+    int* leftPost=FindPost(pre[1],size/2);
+    int* rightPost=FindPost(pre[1+size/2],size/2);
+    for(int i=0;i<size-1;i++){
+        pre[i]=pre[i+1];
+    }
+    pre[size-1]=root;
+    return pre;
+}
+
+//4.3.16
+BiNode* LinkLeafNode(BiTree &T){
+    InitStack(S);
+    q=T;
+    listRoot=null;
+    prev=null;
+    while(q!=null||!IsEmpty(S)){
+        if(q!=null){
+            Push(S,q);
+            if(q->lchild==null&&q->rchild==null){
+                if(listRoot==null){
+                    listRoot = q;
+                    prev = q;
+                }
+                else{
+                    prev->rchild=q;
+                    prev=q;
+                }
+            }
+            q=q->lchild;
+        }
+        else{
+            Pop(S,q);
+            q=q->rchild;
+        }
+    }
+    return listRoot;
+}
+
+//4.3.17
+bool IsSimilar(BiTree &T1,BiTree &T2){
+    if(T1==null&&T2==null){
+        return true;
+    }
+    if(T1->lchild==null&&T1->rchild
+        &&T2->lchild==null&&T2->rchild){
+        return true;
+    }
+    return IsSimilar(T1->lchild,T2->lchild)&&IsSimilar(T1->rchild,T2->rchild);
+}
+
+//4.3.18
+
+
+//4.3.19
+int CalcWPL(BiTree &T){
+    InitStack(S);
+    p=T;
+    r=null;
+    int wpl=0;
+    while(p!=null||!IsEmpty(S)){
+        if(p!=null){
+            Push(S,p);
+            p=p->lchild;
+        }
+        else{
+            GetTop(S,p);
+            if(p->rchild==null){
+                wpl+=p->weight*StackLength(S);
+            }
+            if(p->rchild!=null&&p->rchild!=r){
+                p=p->rchild;
+                Push(S,p);
+                p=p->lchild;
+            }
+            else{
+                Pop(S,p);
+                r=p;
+                p=null;
+            }
+        }
+    }
+    return wpl;
+}
+
+//4.3.20
+void GenExpression(BiTree &T){
+    // InitStack(S);
+    // p=T;
+    // while(p!=null||!IsEmpty(S)){
+    //     if(p!=null){
+    //         Push(S,p);
+    //         p=p->lchild;
+    //     }
+    //     else{
+    //         Pop(S,p);
+    //         visit(p);
+    //         p=p->rchild;
+    //     }
+    // }
+    if(T->lchild==null&&T->rchild==null){
+        return T->data;
+    }
+    else if(T->lchild!=null&&T->rchild==null){
+        return GenExpression(T->lchild)+T->data;
+    }
+    else if(T->lchild==null&&T->rchild!=null){
+        return T->data+GenExpression(T->rchild);
+    }
+    else{
+        return GenExpression(T->lchild)+T->data+GenExpression(T->rchild);
+    }
 }
