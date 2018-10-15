@@ -1,0 +1,125 @@
+//5.3.2
+bool isTree(Graph &G){
+    for(int i=0;i<G.vexnum;i++){
+        visited[i]=FALSE;
+    }
+    int vNum=0;
+    int eNum=0;
+    DFS(G,1,vNum,eNum,visited);
+    if(vNum==G.vexnum&&eNum==2*(vNum-1)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+void DFS(Graph &G,int v,int &vNum,int &eNum,int* visited){
+    visited[v]=TRUE;
+    vNum++;
+    int w=FirstNeighbour(G,v);
+    while(w!=-1){
+        eNum++;
+        DFS(G,w,vNum,eNum,visited);
+        w=NextNeighbour(G,v,w);
+    }
+}
+
+//5.3.3
+void DFS_NON_Recursive(Graph &G,int v){
+    bool *visited=(bool*)malloc(sizeof(bool)*G.vexnum);
+    for(int i=0;i<G.vexnum;i++){
+        visited[i]=false;
+    }
+    InitStack(S);
+    int w=FirstNeighbour(G,v);
+    Push(S,w);
+    visited[w]=true;
+    while(!IsEmpty(S)){
+        Pop(S,k);
+        for(w=FirstNeighbour(G,w);w>=0;w=NextNeighbour(G,k,w)){
+            if(!visited[w]){
+                Push(S,w);
+                visited[w]=true;
+            }
+        }
+    }
+}
+
+//5.3.4
+bool DFS_FindPath(Graph &G,int vi,int vj){
+    bool *visited=(bool*)malloc(G.vexnum*sizeof(bool));
+    for(int i=0;i<G.vexnum;i++){
+        visited[i]=false;
+    }
+    InitStack(S);
+    Push(S,vi);
+    visited[vi]=true;
+    while(!IsEmpty(S)){
+        Pop(S,k);
+        for(int w=FirstNeighbour(G,k);w>=0;w=NextNeighbour(G,k,w)){
+            if(visited[w]==false){
+                if(w==vj){
+                    return true;
+                }
+                else{
+                    visited[w]=true;
+                    Push(S,w);
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool DFS_FindPath_Recursive(Graph &G,int vi,int vj,int* visited){
+    if(vi==vj){
+        return true;
+    }
+    visited[vi]=true;
+    for(int w=FirstNeighbour(G,vi);w>=0;w=NextNeighbour(G,vi,w)){
+        if(!visited[w]&&DFS_FindPath_Recursive(G,w,vj,visited)){
+            return true;
+        }
+    }
+    return false;
+}
+
+bool BFS_FindPath(Graph &G,int vi,int vj){
+    InitQueue(Q);
+    bool *visited=(bool*)malloc(G.vexnum*sizeof(bool));
+    for(int i=0;i<G.vexnum;i++){
+        visited[i]=false;
+    }
+    EnQueue(Q,vi);
+    visited[vi]=true;
+    while(!IsEmpty(Q)){
+        DeQueue(Q,k);
+        visited[k]=true;
+        for(int w=FirstNeighbour(G,k);w>=0;w=NextNeighbour(G,k,w)){
+            if(w==vj){
+                return true;
+            }
+            if(!visited[w]){
+                EnQueue(Q,w);
+            }
+        }
+    }
+    return false;
+}
+
+//5.3.5
+void All_Path(Graph &G,int vi,int vj,Stack &S,int* visited){
+    if(vi==vj){
+        print(S);
+    }
+    Push(S,vi);
+    visited[vi]=true;
+    for(int p=FirstNeighbour(G,vi);p>=0;p=NextNeighbour(G,vi,p)){
+        if(visited[p]==false){
+            All_Path(G,p,vj,S,visited);
+        }
+    }
+    Pop(S,p);
+}
+
