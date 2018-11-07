@@ -569,3 +569,140 @@ int BSTreeNodeDel(BSTreeNode **tree,DataType x) //删除
 
     return -1;
 }
+//平衡二叉树旋转
+typedef struct AVLNode{
+    AVLNode* lchild;
+    AVLNode* rchild;
+    ElemType data;
+    int height;
+}AVLNode;
+
+int Height(AVLNode &T){
+    if(T==null){
+        return -1;
+    }
+    else{
+        return T->height;
+    }
+}
+AVLNode* RotateLL(AVLNode &T){
+    AVLNode* top = T->lchild;
+    T->lchild = top->rchild;
+    top->rchild = T;
+    T->height = max(Height(T->lchild),Height(T->rchild))+1;
+    top->height = max(Height(top->lchild),Height(top->rchild))+1;
+    return top;
+}
+
+AVLNode* RotateRR(AVLNode &T){
+    AVLNode* top = T->rchild;
+    T->rchild = top->lchild;
+    top->lchild = T;
+    T->height = max(Height(T->lchild),Height(T->rchild))+1;
+    top->height = max(Height(top->lchild),Height(top->rchild))+1;
+    return top;
+}
+
+AVLNode* RotateLR(AVLNode &T){
+    T->lchild = RotateRR(T->lchild);
+    RotateLL(T);
+}
+
+AVLNode* RotateRL(AVLNode &T){
+    T->rchild = RotateLL(T->rchild);
+    RotateRR(T);
+}
+
+AVLNode* Insert(AVLNode &T,AVLNode* node){
+    AVLNode* p=T;
+    if(p==null){
+        T=node;
+        return T;
+    }
+    else{
+        if(p->data>node->data){
+            p->lchild=Insert(p->lchild,node);
+            if(Height(p->lchild)-Height(p->rchild)=2){
+                if(p->lchild->data>node->data){
+                    p=RotateLL(p);
+                }
+                else{
+                    p=RotateLR(p);
+                }
+            }
+        }
+        else if(p->data<node->data){
+            p->rchild=Insert(p->rchild,node);
+            if(Height(p->rchild)-Height(p->lchild)=2){
+                if(p->rchild->data>node->data){
+                    p=RotateRL(p);
+                }
+                else{
+                    p=RotateRR(p);
+                }
+            }
+        }
+        p->height=max(Height(T->lchild),Height(T->rchild))+1;
+        return p;
+    }
+}
+
+//BSTreeDel
+BSNode* Delete(BSTree &T,ElemType x){
+    BSNode* p=T;
+    BSNode* parent=T;
+    while(p){
+        if(p->data==x){
+            if(p->lchild==null&&p->rchild!=null){
+                if(parent->lchild==p){
+                    parent->lchild=p->rchild;
+                }
+                else{
+                    parent->rchild=p->rchild;
+                }
+                free(p);
+                return T;
+            }
+            else if(p->lchild!=null&&p->rchild==null){
+                if(parent->lchild==p){
+                    parent->lchild=p->lchild;
+                }
+                else{
+                    parent->rchild=p->lchild;
+                }
+                free(p);
+                return T;
+            }
+            else if(p->lchild!=null&&p->rchild!=null){
+                BSNode* del=p->rchild;
+                BSNode* subParent=p;
+                while(del->lchild){
+                    subParent=del;
+                    del=del->lchild;
+                }
+                p->data=del->data;
+                if(parent->lchild==p){
+                    parent->lchild=subParent->rchild;
+                }
+                else{
+                    parent->rchild=subParent->rchild;
+                }
+                free(p);
+                return T;
+            }
+            else{
+                free(p);
+                return T;
+            }
+        }
+        else if(p->data>x){
+            parent=p;
+            p=p->lchild;
+        }
+        else if(p->data<x){
+            parent=p;
+            p=p->rchild;
+        }
+    }
+    return NULL;
+}
