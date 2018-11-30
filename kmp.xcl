@@ -13,3 +13,27 @@ int* GetNext(char* p,int size){
     }
     return next;
 }
+
+
+
+public static void quickSort(int[] a,int low,int high){
+        if(low>=high){
+            return;
+        }
+        int pivot = a[low];
+        int first = low;
+        int last = high;
+        while(first<last){
+            while(a[last]>pivot&&first<last){
+                last--;
+            }
+            a[first]=a[last];
+            while(a[first]<pivot&&first<last){
+                first++;
+            }
+            a[last]=a[first];
+        }
+        a[first] = pivot;
+        quickSort(a,low,first-1);
+        quickSort(a,first+1,high);
+    }
